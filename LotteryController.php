@@ -221,68 +221,20 @@ class LotteryController extends Controller
         $last_list = $last_res->data;
 //        dd($last_list);
         //$lottery_list = config('lottery.lottery_list');
-        $url_list = array();
         foreach ($last_list as $k => $v){
-            $lottery = $v->lottery;
-            $res_issue = $v->issue;
-            $j = 120;
-            for($i=0;$i<$j;$i++) {
-/*                if ($lottery == 'jx11y' || $lottery == 'ssl'){
-                    $issue_arr = explode('-',$res_issue);
-                    if (!(intval($issue_arr[1] - $i) <= 0)){
-                        $issue = $issue_arr[0].'-'.(intval($issue_arr[1]) - $i);
-                        //dd($issue);
-                    }else{
-                        break;
-                    }
-                }else if($lottery == 'cqssc'){
-                    $start = substr($res_issue,0,6);
-                    $end = substr($res_issue,-3);
-                    if ((intval($end)-$i) <= 0){
-                        $res_issue = (intval($start) - 1).'120';
-                        $issue = $res_issue;
-                        $i = 0;
-                    }else{
-                        $issue = intval($res_issue) - $i;
-                    }
-                }else if($lottery == 'hljssc'){
-                    $issue = intval($res_issue) - $i;
-                    $issue = '0'.$issue;
-                }else{
-                    $issue = intval($res_issue) - $i;
-                }*/
-                if ($lottery == 'jx11y'){
-                    $issue = intval($res_issue) - $i;
-                }elseif($lottery == 'ssl'){
-                    $issue_arr = explode('-',$res_issue);
-                    if (!(intval($issue_arr[1] - $i) <= 0)){
-                        $issue = $issue_arr[0].'-'.(intval($issue_arr[1]) - $i);
-                        //dd($issue);
-                    }else{
-                        break;
-                    }
-                }else{
-                    break;
-                }
+            $data['image'] = '';
+            $data['issue'] = $v->issue;
+            $data['code'] = $v->code;
+            $data['open_time'] = strtotime($v->end_time);
 
-                $url = "https://source.ecsvc.info/lottery/$lottery/issue/$issue";
-                $url_list[] = $url;
-                $res = json_decode($this->getData($url));
-                if ($res->message === 'Success'){
-                    $data['issue'] = $res->data->issue;
-                    $data['code'] = $res->data->code;
-                    $data['open_time'] = strtotime($res->data->end_time);
-
-                    $model_name = $this->model_path.config('lottery.lottery_list.'.$lottery.'.model');
-                    $model = new $model_name;
-                    $model->updateOrCreate(
-                        ['issue' => $data['issue']],
-                        $data
-                    );
-                }
-            }
+            $model_name = $this->model_path.config('lottery.lottery_list.'.$v->lottery.'.model');
+            $model = new $model_name;
+            $model->updateOrCreate(
+                ['issue' => $data['issue']],
+                $data
+            );
         }
-        dd($url_list);
+        dd(111);
     }
 
     public function setLottery(Request $request){
