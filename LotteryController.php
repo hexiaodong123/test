@@ -227,7 +227,7 @@ class LotteryController extends Controller
             $res_issue = $v->issue;
             $j = 120;
             for($i=0;$i<$j;$i++) {
-                if ($lottery == 'jx11y' || $lottery == 'ssl'){
+/*                if ($lottery == 'jx11y' || $lottery == 'ssl'){
                     $issue_arr = explode('-',$res_issue);
                     if (!(intval($issue_arr[1] - $i) <= 0)){
                         $issue = $issue_arr[0].'-'.(intval($issue_arr[1]) - $i);
@@ -250,6 +250,19 @@ class LotteryController extends Controller
                     $issue = '0'.$issue;
                 }else{
                     $issue = intval($res_issue) - $i;
+                }*/
+                if ($lottery == 'jx11y'){
+                    $issue = intval($res_issue) - $i;
+                }elseif($lottery == 'ssl'){
+                    $issue_arr = explode('-',$res_issue);
+                    if (!(intval($issue_arr[1] - $i) <= 0)){
+                        $issue = $issue_arr[0].'-'.(intval($issue_arr[1]) - $i);
+                        //dd($issue);
+                    }else{
+                        break;
+                    }
+                }else{
+                    break;
                 }
 
                 $url = "https://source.ecsvc.info/lottery/$lottery/issue/$issue";
